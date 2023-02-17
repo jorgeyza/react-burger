@@ -16,11 +16,13 @@ You can view the [live version here](https://jorgeyza.github.io/react-burger/)
 
 All commands are run from the root of the project, from a terminal:
 
-| Command        | Action                                |
-| :------------- | :------------------------------------ |
-| `pnpm dev`     | Launch dev server                     |
-| `pnpm build`   | Build web app                         |
-| `pnpm preview` | Preview application using built files |
+| Command           | Action                                |
+| :---------------- | :------------------------------------ |
+| `pnpm dev`        | Launch dev server                     |
+| `pnpm build`      | Build web app                         |
+| `pnpm preview`    | Preview application using built files |
+| `pnpm predeploy`  | Build web app                         |
+| `pnpm run deploy` | Deploy built files to GitHub pages    |
 
 ## Highlights of the project
 
