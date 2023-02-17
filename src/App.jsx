@@ -1,34 +1,70 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import React, { useEffect, Suspense } from "react";
+import { Route, Switch, withRouter, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
-function App() {
-  const [count, setCount] = useState(0)
+import Layout from "./hoc/Layout/Layout";
+import BurgerBuilder from "./containers/BurgerBuilder/BurgerBuilder";
+import Logout from "./containers/Auth/Logout/Logout";
+import * as actions from "./store/actions/index";
+
+const Checkout = React.lazy(() => {
+  return import("./containers/Checkout/Checkout");
+});
+
+const Orders = React.lazy(() => {
+  return import("./containers/Orders/Orders");
+});
+
+const Auth = React.lazy(() => {
+  return import("./containers/Auth/Auth");
+});
+
+const App = (props) => {
+  const { onTryAutoSignup } = props;
+  useEffect(() => {
+    onTryAutoSignup();
+  }, [onTryAutoSignup]);
+
+  let routes = (
+    <Switch>
+      <Route path="/auth" render={(props) => <Auth {...props} />} />
+      <Route path="/" exact component={BurgerBuilder} />
+      <Redirect to="/" />
+    </Switch>
+  );
+
+  if (props.isAuthenticated) {
+    routes = (
+      <Switch>
+        <Route path="/checkout" render={(props) => <Checkout {...props} />} />
+        <Route path="/orders" render={(props) => <Orders {...props} />} />
+        <Route path="/logout" component={Logout} />
+        <Route path="/auth" render={(props) => <Auth {...props} />} />
+        <Route path="/" exact component={BurgerBuilder} />
+        <Redirect to="/" />
+      </Switch>
+    );
+  }
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+    <div>
+      <Layout>
+        <Suspense fallback={<p>Loading...</p>}>{routes}</Suspense>
+      </Layout>
     </div>
-  )
-}
+  );
+};
 
-export default App
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.auth.token !== null,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onTryAutoSignup: () => dispatch(actions.authCheckState()),
+  };
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
