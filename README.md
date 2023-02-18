@@ -8,7 +8,7 @@ Project migrated from CRA to Vite. Based on the 2020 version of the udemy course
 
 To run the project, use the command "pnpm dev".
 
-You can view the [live version here](https://jorgeyza.github.io/react-burger/)
+You can view the [live version here](https://react-burger.jorgeyza.com/)
 
 **To be able to order you have to create an account and then sign in (Authenticate).**
 
